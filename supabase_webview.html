@@ -2,51 +2,59 @@
 <html>
 <head>
   <title>Supabase WebView</title>
+  <!-- Load Supabase JS library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Initialize Supabase client
-    const supabaseUrl = 'https://harwimvvdwrxeihbjuwn.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-    console.log('Supabase client initialized:', supabase);
+    // Wait for the DOM and Supabase library to load
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('DOM fully loaded. Initializing Supabase client...');
 
-    // Function to fetch and display content
-    async function fetchAndDisplayContent() {
-      const contentDiv = document.getElementById('content');
-      try {
-        console.log('Fetching content from Supabase...');
+      // Initialize Supabase client
+      const supabaseUrl = 'https://harwimvvdwrxeihbjuwn.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E';
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Fetch the latest content from Supabase
-        const { data, error } = await supabase
-          .from('editor_content')
-          .select('content')
-          .order('created_at', { ascending: false })
-          .limit(1);
-        console.log('Query result:', data, error);
+      console.log('Supabase client initialized:', supabase);
 
-        // Check for errors
-        if (error) {
-          console.error('Supabase error:', error);
-          contentDiv.innerHTML = 'Error fetching content.';
-          return;
+      // Function to fetch and display content
+      async function fetchAndDisplayContent() {
+        const contentDiv = document.getElementById('content');
+        try {
+          console.log('Fetching content from Supabase...');
+
+          // Fetch the latest content from Supabase
+          const { data, error } = await supabase
+            .from('editor_content')
+            .select('content')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+          console.log('Query result:', data, error);
+
+          // Check for errors
+          if (error) {
+            console.error('Supabase error:', error);
+            contentDiv.innerHTML = 'Error fetching content.';
+            return;
+          }
+
+          // Display the content
+          if (data && data.length > 0) {
+            console.log('Content fetched successfully:', data[0].content);
+            contentDiv.innerHTML = data[0].content;
+          } else {
+            console.log('No content found.');
+            contentDiv.innerHTML = 'No content found.';
+          }
+        } catch (error) {
+          console.error('Unexpected error:', error);
+          contentDiv.innerHTML = 'Failed to load content.';
         }
-
-        // Display the content
-        if (data && data.length > 0) {
-          console.log('Content fetched successfully:', data[0].content);
-          contentDiv.innerHTML = data[0].content;
-        } else {
-          console.log('No content found.');
-          contentDiv.innerHTML = 'No content found.';
-        }
-      } catch (error) {
-        console.error('Unexpected error:', error);
-        contentDiv.innerHTML = 'Failed to load content.';
       }
-    }
 
-    // Fetch and display content when the page loads
-    window.onload = fetchAndDisplayContent;
+      // Fetch and display content
+      await fetchAndDisplayContent();
+    });
   </script>
 </head>
 <body>
