@@ -46,7 +46,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             // Supabase Credentials
-            const SUPABASE_URL = "https://harwimvvdwrxeihbjuwn.supabase.co";  // Replace with your actual Supabase URL
+            const SUPABASE_URL = "https://harwimvvdwrxeihbjuwn.supabase.co";  // Replace with your Supabase URL
             const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E";  // Replace with your actual anon key
             const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -62,19 +62,20 @@
 
                 if (error) {
                     console.error("Supabase Error:", error);
-                    contentDiv.innerHTML = "Error loading content.";
+                    contentDiv.innerHTML = "<p style='color:red;'>Error loading content.</p>";
                     return;
                 }
 
                 if (data.length > 0) {
-                    contentDiv.innerHTML = data[0].content;  // Inject fetched HTML into the page
+                    // Inject HTML content correctly
+                    contentDiv.innerHTML = data[0].content;
                 } else {
-                    contentDiv.innerHTML = "No content found in the database.";
+                    contentDiv.innerHTML = "<p>No content found in the database.</p>";
                 }
 
             } catch (err) {
                 console.error("Unexpected Error:", err);
-                contentDiv.innerHTML = "Failed to load content.";
+                contentDiv.innerHTML = "<p style='color:red;'>Failed to load content.</p>";
             }
         });
     </script>
