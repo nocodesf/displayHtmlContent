@@ -1,60 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Supabase WebView</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      console.log('DOM fully loaded. Initializing Supabase client...');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase HTML Viewer</title>
 
-      // Initialize Supabase client
-      const supabaseUrl = 'https://harwimvvdwrxeihbjuwn.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E';
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-      console.log('Supabase client initialized:', supabase);
+    <!-- Load Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      // Fetch and display content
-      async function fetchAndDisplayContent() {
-        const contentDiv = document.getElementById('content');
-        try {
-          console.log('Fetching content from Supabase...');
-
-          // Fetch the latest content from Supabase
-          const { data, error } = await supabase
-            .from('editor_content')
-            .select('content')
-            .order('created_at', { ascending: false })
-            .limit(1);
-
-          console.log('Query result:', data, error);
-
-          // Check for errors
-          if (error) {
-            console.error('Supabase error:', error);
-            contentDiv.innerHTML = 'Error fetching content.';
-            return;
-          }
-
-          // Display the content
-          if (data && data.length > 0) {
-            console.log('Content fetched successfully:', data[1].content);
-            contentDiv.innerHTML = data[1].content; // Render HTML content
-          } else {
-            console.log('No content found.');
-            contentDiv.innerHTML = 'No content found.';
-          }
-        } catch (error) {
-          console.error('Unexpected error:', error);
-          contentDiv.innerHTML = 'Failed to load content.';
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
         }
-      }
-
-      // Fetch and display content
-      await fetchAndDisplayContent();
-    });
-  </script>
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        #content {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-  <div id="content">Loading...</div>
+
+    <div class="container">
+        <h1>Supabase Dynamic HTML Viewer</h1>
+        <p>Fetching content from Supabase...</p>
+        <div id="content">Loading...</div>
+    </div>
+
+    <script>
+        // Initialize Supabase client
+        const SUPABASE_URL = "https://harwimvvdwrxeihbjuwn.supabase";
+        const SUPABASE_KEY = ": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E";  // Replace with your actual anon key
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Function to fetch HTML content from Supabase
+        async function fetchAndDisplayContent() {
+            const contentDiv = document.getElementById('content');
+
+            try {
+                // Fetch the latest HTML content from the "editor_content" table
+                const { data, error } = await supabase
+                    .from('editor_content')
+                    .select('content')
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                // Handle errors
+                if (error) {
+                    console.error("Supabase Error:", error);
+                    contentDiv.innerHTML = "Error loading content.";
+                    return;
+                }
+
+                // Check if content exists
+                if (data.length > 0) {
+                    contentDiv.innerHTML = data[0].content;  // Render HTML content
+                } else {
+                    contentDiv.innerHTML = "No content found.";
+                }
+
+            } catch (err) {
+                console.error("Unexpected Error:", err);
+                contentDiv.innerHTML = "Failed to load content.";
+            }
+        }
+
+        // Fetch content when the page loads
+        fetchAndDisplayContent();
+    </script>
+
 </body>
 </html>
+
