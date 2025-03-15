@@ -44,47 +44,40 @@
     </div>
 
     <script>
-        // Initialize Supabase client
-        const SUPABASE_URL = "https://harwimvvdwrxeihbjuwn.supabase";
-        const SUPABASE_KEY = ": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E";  // Replace with your actual anon key
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        document.addEventListener("DOMContentLoaded", async function () {
+            // Supabase Credentials
+            const SUPABASE_URL = "https://harwimvvdwrxeihbjuwn.supabase.co";  // Replace with your actual Supabase URL
+            const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcndpbXZ2ZHdyeGVpaGJqdXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4NzU0MTgsImV4cCI6MjA1NjQ1MTQxOH0.pzhS-Iq01lgKfbOfwflnIdv_mZsOtVQTwY1xSX_ib3E";  // Replace with your actual anon key
+            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Function to fetch HTML content from Supabase
-        async function fetchAndDisplayContent() {
             const contentDiv = document.getElementById('content');
 
             try {
-                // Fetch the latest HTML content from the "editor_content" table
+                // Fetch latest HTML content from Supabase table
                 const { data, error } = await supabase
                     .from('editor_content')
                     .select('content')
                     .order('created_at', { ascending: false })
                     .limit(1);
 
-                // Handle errors
                 if (error) {
                     console.error("Supabase Error:", error);
                     contentDiv.innerHTML = "Error loading content.";
                     return;
                 }
 
-                // Check if content exists
                 if (data.length > 0) {
-                    contentDiv.innerHTML = data[0].content;  // Render HTML content
+                    contentDiv.innerHTML = data[0].content;  // Inject fetched HTML into the page
                 } else {
-                    contentDiv.innerHTML = "No content found.";
+                    contentDiv.innerHTML = "No content found in the database.";
                 }
 
             } catch (err) {
                 console.error("Unexpected Error:", err);
                 contentDiv.innerHTML = "Failed to load content.";
             }
-        }
-
-        // Fetch content when the page loads
-        fetchAndDisplayContent();
+        });
     </script>
 
 </body>
 </html>
-
